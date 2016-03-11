@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Angka Unik</title>
+
+</head>
+<body bgcolor="#E6E6FA">
+<br />
+<h1> <font size="6" align="center">PROGRAM ANGKA UNIK</font></h1>
+<br />
+<br />
+<br />
+  
+<br />
+<p align="center"> Silahkan masukkan input nilai digit :<br />
+<br /><textarea id='input' style='width:10%;  height:20px;'></textarea><br />
+<br />
+<br />
+Output angka Unik :<br />
+<br /><textarea id='output' readonly="readonly" style='width:60%; height:90px;'></textarea>
+<br />
+<br />
+<br />
+        <button class="btn btn-lg btn-primary btn-block" style="background-color:#aaaaaa; color:#fff;" type="submit">Tampilkan</button>
+
+</p>
+<script src="jquery-2.7.3.min.js"></script>
+<script>
+var zero_pad = function(n,N) {
+    var string = n + '';
+    var num_zeros = N - (string).length;
+    for(var j = 0;j < num_zeros;j++) {
+        string = '0' + string;
+    }
+    return string;
+};
+
+var process = function() {
+    var input = $('#input').val();
+    //console.log(parseInt(input));return;
+    //console.log(input.length);
+    for(var i = 0;i < input.length;i++) {
+        //console.log(input.substr(i,1));
+        if(isNaN(input.substr(i,1))) {
+            $('#output').text('Salah, masukkan input angka genap');
+            return;
+        }
+    }
+    var N = parseInt(input);
+    if(isNaN(N) || (N % 2 != 0)) {
+        $('#output').text('Masukkan Angka GENAP, bukan Angka GANJIL');
+        return;
+    }
+    if(N > 12) {
+        $('#output').text('input yang anda masukkan terlalu besar');
+        return;
+    }
+	if(N == 0) {
+        $('#output').text('input yang anda masukkan NULL, salah, harus angka genap');
+        return;
+    }
+    
+    var max_sum = Math.pow(10,N / 2) - 1;
+    var answers = [];
+    //console.log(Math.floor((max_sum + 1) / 2));
+    //for(var i = max_sum;i >= Math.floor((max_sum + 1) / 2);i--) {
+    for(var i = max_sum;i >= 0;i--) {
+        //console.log(i);
+        var power_of_two = Math.pow(i,2);
+        var power_of_two_string = zero_pad(power_of_two,N);
+        //console.log(power_of_two_string);
+        var num_1 = parseInt(power_of_two_string.substr(0,N / 2));
+        var num_2 = parseInt(power_of_two_string.substr(N / 2));
+        //console.log(power_of_two + '|' + num_1 + '|' + num_2);
+        if(i == (num_1 + num_2)) {
+            if(answers.indexOf(power_of_two_string) == -1) {
+                answers.push(power_of_two_string);
+            }
+        }
+    }
+    
+    answers.sort();
+    var string_result = '';
+    for(var i = 0;i < answers.length;i++) {
+        string_result += zero_pad(answers[i],N / 2);
+        if(i <= answers.length - 2) {
+            string_result += ', ';
+            if(i == answers.length - 2) {
+                string_result += 'dan ';
+            }
+        }
+    }
+    //console.log(string_result);
+    $('#output').text(string_result);
+};
+
+$(document).ready(function() {
+    $('#input').blur(function() {
+        process();
+    });
+});
+</script>
+</body>
+</html>
